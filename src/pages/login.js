@@ -18,6 +18,7 @@ export default class Login extends React.Component {
   onEnter(e) {
     if (e.key === 'Enter') {
       if (e.target.value === '1234') {
+        localStorage.windowsx_jirachai = 'windowsx_jirachai'
         e.target.value = ''
         document.querySelector('#mac').play()
         const classN = document.querySelector('#loading').className.replace('hide', '')

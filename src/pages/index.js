@@ -1,5 +1,9 @@
 import React from 'react'
 
+import {
+  Redirect
+} from 'react-router-dom'
+
 import './style.scss'
 
 const Icon = ({ icon = 'bin' , name = 'Recycle Bin', siri}) => {
@@ -67,15 +71,21 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      logged_in: false,
+      logged_in: true,
     }
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      const classN = document.querySelector('#home-bg').className
-      document.querySelector('#home-bg').className = classN + ' windows'
-    }, 1000)
+    if (!localStorage.windowsx_jirachai) {
+      this.setState({
+        logged_in: false,
+      })
+    } else {
+      setTimeout(() => {
+        const classN = document.querySelector('#home-bg').className
+        document.querySelector('#home-bg').className = classN + ' windows'
+      }, 1000)
+    }
   }
 
   toggleL(action = false) {
@@ -86,6 +96,11 @@ export default class Home extends React.Component {
   render() {
     return (
       <div id="home">
+        {
+          !this.state.logged_in && <Redirect to={{
+            pathname: '/login',
+          }}/>
+        }
         <div id="launchpad" className="hide" onClick={() => {
           const classN = document.querySelector('#launchpad').className + ' hide'
           document.querySelector('#launchpad').className = classN
