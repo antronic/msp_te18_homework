@@ -90,10 +90,12 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
+      'components': path.resolve(path.join(__dirname, '..', 'src', 'components')),
+      'pages': path.resolve(path.join(__dirname, '..', 'src', 'pages')),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -121,7 +123,7 @@ module.exports = {
             options: {
               formatter: eslintFormatter,
               eslintPath: require.resolve('eslint'),
-              
+
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -149,7 +151,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+
               compact: true,
             },
           },
@@ -206,6 +208,16 @@ module.exports = {
               )
             ),
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+          },
+          // scss
+          {
+            test: /.scss$/,
+            include: paths.appSrc,
+            loader: [
+              require.resolve('style-loader'),
+              require.resolve('css-loader'),
+              require.resolve('sass-loader')
+            ],
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
