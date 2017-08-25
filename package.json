@@ -45,6 +45,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
+    "gh-pages": "^1.0.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6"
   },
