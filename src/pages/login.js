@@ -18,9 +18,17 @@ export default class Login extends React.Component {
   onEnter(e) {
     if (e.key === 'Enter') {
       if (e.target.value === '1234') {
-        this.setState({
-          logged_in: true,
-        })
+        e.target.value = ''
+        document.querySelector('#mac').play()
+        const classN = document.querySelector('#loading').className.replace('hide', '')
+        document.querySelector('#loading').className = classN
+        const classN2 = document.querySelector('#password').className + ' hide'
+        document.querySelector('#password').className = classN2
+        setTimeout(() => {
+          this.setState({
+            logged_in: true,
+          })
+        }, 4000)
       }
     }
   }
@@ -34,6 +42,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <div id="login">
+        <audio id="mac" src="/sounds/mac.mp3"></audio>
         {
           this.state.logged_in && (
             <Redirect to={{
@@ -50,7 +59,10 @@ export default class Login extends React.Component {
             <span>{this.state.username}</span>
           </div>
           <div className="password-box">
-            <input type="password" placeholder="PIN" pattern="[0-9]*" maxLength="4" onKeyDown={this.onEnter.bind(this)} onInput={this.handleChange.bind(this)} value={this.state.pin}/>
+            <div id="loading" className="text-center hide">
+              <img src="/img/loading.gif" alt="loading" width="50px"/>
+            </div>
+            <input id="password" type="password" placeholder="PIN" pattern="[0-9]*" maxLength="4" onKeyDown={this.onEnter.bind(this)} onInput={this.handleChange.bind(this)} value={this.state.pin}/>
           </div>
         </div>
       </div>

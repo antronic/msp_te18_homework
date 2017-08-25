@@ -51,7 +51,7 @@ const TaskBar = class TaskBar extends React.Component {
     return (
       <div id="task-bar" className="col">
         <div className="row">
-          <div className="col-1 icon">
+          <div className="col-1 icon" onClick={() => this.props.l()}>
             <img src="/img/windows.png" alt="Start Here" />
           </div>
           <div className="col-1 icon" onClick={() => this.props.siri()}>
@@ -78,9 +78,18 @@ export default class Home extends React.Component {
     }, 1000)
   }
 
+  toggleL(action = false) {
+    const classN = document.querySelector('#launchpad').className.replace('hide', '')
+    document.querySelector('#launchpad').className = classN
+  }
+
   render() {
     return (
       <div id="home">
+        <div id="launchpad" className="hide" onClick={() => {
+          const classN = document.querySelector('#launchpad').className + ' hide'
+          document.querySelector('#launchpad').className = classN
+          }}></div>
         <div className="siri-ctl">
           <Siri ref="siri"/>
         </div>
@@ -89,7 +98,7 @@ export default class Home extends React.Component {
           <Icon/>
           <Icon icon="finder" name="Finder"/>
         </div>
-        <TaskBar siri={() => { this.refs.siri.toggleSiri(true) }}/>
+        <TaskBar l={() => { this.toggleL(true) }} siri={() => { this.refs.siri.toggleSiri(true) }}/>
       </div>
     )
   }
