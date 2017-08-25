@@ -1,4 +1,5 @@
 import React from 'react'
+import Draggable from 'react-draggable'
 
 import {
   Redirect
@@ -6,9 +7,9 @@ import {
 
 import './style.scss'
 
-const Icon = ({ icon = 'bin' , name = 'Recycle Bin', siri}) => {
+const Icon = ({ icon = 'bin' , name = 'Recycle Bin', open}) => {
   return (
-    <div className="col-1 icon text-center" onClick={() => siri()}>
+    <div className="col-1 icon text-center" onDoubleClick={() => open()}>
       <img src={'img/' + icon + '.png'} alt="Recycle Bin" />
       <p>{name}</p>
     </div>
@@ -67,11 +68,59 @@ const TaskBar = class TaskBar extends React.Component {
   }
 }
 
+const Window = class Window extends React.Component {
+  removeLocalStorage() {
+    localStorage.removeItem('windowsx_jirachai')
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+    this.props.close()
+  }
+
+  render() {
+    return (
+      <Draggable
+        axis="x"
+        handle=".handle"
+        defaultPosition={{x: 0, y: 0}}
+        position={null}
+        grid={[25, 25]}
+        onStart={this.handleStart}
+        onDrag={this.handleDrag}
+        onStop={this.handleStop}
+      >
+        <div className="window">
+          <div className="title-bar">
+            <p>Clear local storage</p>
+            <button className="close-btn" onClick={() => this.props.close()}>✕</button>
+          </div>
+          <div className="body">
+            <h2>Would you like to clear data?</h2>
+            <br/>
+            <br/>
+            <div className="text-right">
+              <button onClick={() => this.removeLocalStorage()}>Yes</button>
+              <button onClick={() => this.props.close()}>No</button>
+            </div>
+          </div>
+        </div>
+      </Draggable>
+    )
+  }
+}
+
 export default class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       logged_in: true,
+      recycle: false,
     }
   }
 
@@ -84,7 +133,7 @@ export default class Home extends React.Component {
       setTimeout(() => {
         const classN = document.querySelector('#home-bg').className
         document.querySelector('#home-bg').className = classN + ' windows'
-      }, 1000)
+      }, 3000)
     }
   }
 
@@ -97,9 +146,15 @@ export default class Home extends React.Component {
     return (
       <div id="home">
         {
+          (!localStorage.windowsx_jirachai) && this.setState({logged_in: false})
+        }
+        {
           !this.state.logged_in && <Redirect to={{
             pathname: '/login',
           }}/>
+        }
+        {
+          this.state.recycle && <Window close={() => this.setState({ recycle: false })} />
         }
         <div id="launchpad" className="hide" onClick={() => {
           const classN = document.querySelector('#launchpad').className + ' hide'
@@ -110,7 +165,7 @@ export default class Home extends React.Component {
         </div>
         <div id="home-bg" className="bg"></div>
         <div className="icons">
-          <Icon/>
+          <Icon open={() => this.setState({ recycle: true })}/>
           <Icon icon="finder" name="Finder"/>
         </div>
         <TaskBar l={() => { this.toggleL(true) }} siri={() => { this.refs.siri.toggleSiri(true) }}/>

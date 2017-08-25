@@ -11,6 +11,16 @@ export default class Login extends React.Component {
     }
   }
 
+  launchFullScreen(element) {
+    if (element.requestFullScreen) {
+      element.requestFullScreen();
+    } else if(element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if(element.webkitRequestFullScreen) {
+      element.webkitRequestFullScreen();
+    }
+  }
+
   validatePIN(e) {
     return !new RegExp('^[0-9]{1,4}$').test(Number(e.target.value)) && e.preventDefault()
   }
@@ -18,6 +28,7 @@ export default class Login extends React.Component {
   onEnter(e) {
     if (e.key === 'Enter') {
       if (e.target.value === '1234') {
+        this.launchFullScreen(document.documentElement)
         localStorage.windowsx_jirachai = 'windowsx_jirachai'
         e.target.value = ''
         document.querySelector('#mac').play()
